@@ -9,6 +9,9 @@ VERSION=$(cat res/version.txt)
 if [[ "$GITHUB_REF" =~ ^refs/tags/v ]]
 then
   REPO=release
+elif [[ "$GITHUB_REF" == "refs/heads/main" ]]
+then
+  REPO=release
 elif [[ "$GITHUB_REF" == "refs/heads/master" ]]
 then
   REPO=development

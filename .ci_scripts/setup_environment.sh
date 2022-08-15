@@ -16,6 +16,7 @@ case "$BUILD_TARGET" in
 	then
         openssl aes-256-cbc -K $FILE_ENCRYPTION_KEY -iv $FILE_ENCRYPTION_IV -in android/augustus.keystore.enc -out android/augustus.keystore -d;
         # openssl aes-256-cbc -K $FILE_ENCRYPTION_KEY -iv $FILE_ENCRYPTION_IV -in android/play-publisher.json.enc -out android/play-publisher.json -d;
+		echo "android"
 	fi
 	;;
 "emscripten")
