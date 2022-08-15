@@ -1,0 +1,118 @@
+#ifndef INPUT_KEYS_H
+#define INPUT_KEYS_H
+
+#include <stdint.h>
+
+typedef enum {
+    KEY_TYPE_NONE = 0,
+    KEY_TYPE_A,
+    KEY_TYPE_B,
+    KEY_TYPE_C,
+    KEY_TYPE_D,
+    KEY_TYPE_E,
+    KEY_TYPE_F,
+    KEY_TYPE_G,
+    KEY_TYPE_H,
+    KEY_TYPE_I,
+    KEY_TYPE_J,
+    KEY_TYPE_K,
+    KEY_TYPE_L,
+    KEY_TYPE_M,
+    KEY_TYPE_N,
+    KEY_TYPE_O,
+    KEY_TYPE_P,
+    KEY_TYPE_Q,
+    KEY_TYPE_R,
+    KEY_TYPE_S,
+    KEY_TYPE_T,
+    KEY_TYPE_U,
+    KEY_TYPE_V,
+    KEY_TYPE_W,
+    KEY_TYPE_X,
+    KEY_TYPE_Y,
+    KEY_TYPE_Z,
+    KEY_TYPE_1,
+    KEY_TYPE_2,
+    KEY_TYPE_3,
+    KEY_TYPE_4,
+    KEY_TYPE_5,
+    KEY_TYPE_6,
+    KEY_TYPE_7,
+    KEY_TYPE_8,
+    KEY_TYPE_9,
+    KEY_TYPE_0,
+    KEY_TYPE_MINUS,
+    KEY_TYPE_EQUALS,
+    KEY_TYPE_ENTER,
+    KEY_TYPE_ESCAPE,
+    KEY_TYPE_BACKSPACE,
+    KEY_TYPE_TAB,
+    KEY_TYPE_SPACE,
+    KEY_TYPE_LEFTBRACKET,
+    KEY_TYPE_RIGHTBRACKET,
+    KEY_TYPE_BACKSLASH,
+    KEY_TYPE_SEMICOLON,
+    KEY_TYPE_APOSTROPHE,
+    KEY_TYPE_GRAVE,
+    KEY_TYPE_COMMA,
+    KEY_TYPE_PERIOD,
+    KEY_TYPE_SLASH,
+    KEY_TYPE_F1,
+    KEY_TYPE_F2,
+    KEY_TYPE_F3,
+    KEY_TYPE_F4,
+    KEY_TYPE_F5,
+    KEY_TYPE_F6,
+    KEY_TYPE_F7,
+    KEY_TYPE_F8,
+    KEY_TYPE_F9,
+    KEY_TYPE_F10,
+    KEY_TYPE_F11,
+    KEY_TYPE_F12,
+    KEY_TYPE_INSERT,
+    KEY_TYPE_DELETE,
+    KEY_TYPE_HOME,
+    KEY_TYPE_END,
+    KEY_TYPE_PAGEUP,
+    KEY_TYPE_PAGEDOWN,
+    // arrow keys
+    KEY_TYPE_RIGHT,
+    KEY_TYPE_LEFT,
+    KEY_TYPE_DOWN,
+    KEY_TYPE_UP,
+    // keypad keys
+    KEY_TYPE_KP_1,
+    KEY_TYPE_KP_2,
+    KEY_TYPE_KP_3,
+    KEY_TYPE_KP_4,
+    KEY_TYPE_KP_5,
+    KEY_TYPE_KP_6,
+    KEY_TYPE_KP_7,
+    KEY_TYPE_KP_8,
+    KEY_TYPE_KP_9,
+    KEY_TYPE_KP_0,
+    KEY_TYPE_KP_PERIOD,
+    KEY_TYPE_KP_PLUS,
+    KEY_TYPE_KP_MINUS,
+    KEY_TYPE_KP_MULTIPLY,
+    KEY_TYPE_KP_DIVIDE,
+    // the key next to left shift on ISO (Non-US) keyboards, usually \ or <
+    KEY_TYPE_NON_US,
+    KEY_TYPE_MAX_ITEMS
+} key_type;
+
+typedef enum {
+    KEY_MOD_NONE = 0,
+    KEY_MOD_SHIFT = 1,
+    KEY_MOD_CTRL = 2,
+    KEY_MOD_ALT = 4,
+    KEY_MOD_GUI = 8,
+} key_modifier_type;
+
+const char *key_combination_name(key_type key, key_modifier_type modifiers);
+
+int key_combination_from_name(const char *name, key_type *key, key_modifier_type *modifiers);
+
+const uint8_t *key_combination_display_name(key_type key, key_modifier_type modifiers);
+
+#endif // INPUT_KEYS_H

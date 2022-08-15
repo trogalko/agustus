@@ -1,0 +1,171 @@
+name: Build Augustus
+on: 
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux AppImage
+            os: ubuntu-18.04
+            BUILD_TARGET: appimage
+            DEPLOY: appimage
+          - name: Linux x64
+            os: ubuntu-22.04
+            cache-key: linux-x64
+            SDL_VERSION: 2.0.20
+            SDL_MIXER_VERSION: 2.0.4
+            MPG123_VERSION: 1.26.5
+            BUILD_TARGET: linux
+            DEPLOY: linux
+          - name: Linux x64 (old SDL versions)
+            os: ubuntu-18.04
+            cache-key: linux-x64
+            SDL_VERSION: 2.0.0
+            SDL_MIXER_VERSION: 2.0.0
+            BUILD_TARGET: linux
+            DEPLOY: linux
+            SKIP_UPLOAD: true
+          - name: macOS
+            os: macos-latest
+            cache-key: macos
+            SDL_VERSION: 2.0.20
+            SDL_MIXER_VERSION: 2.0.4
+            BUILD_TARGET: mac
+            DEPLOY: mac
+          - name: PS Vita
+            os: ubuntu-20.04
+            BUILD_TARGET: vita
+            DEPLOY: vita
+          - name: Nintendo Switch
+            os: ubuntu-20.04
+            BUILD_TARGET: switch
+            DEPLOY: switch
+          - name: Android
+            os: ubuntu-20.04
+            cache-key: android
+            SDL_VERSION: 2.0.20
+            SDL_MIXER_VERSION: 2.0.4
+            BUILD_TARGET: android
+            DEPLOY: android
+          - name: Emscripten
+            os: ubuntu-22.04
+            cache-key: emscripten
+            BUILD_TARGET: emscripten
+            DEPLOY: emscripten
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    env:
+      SDL_VERSION: ${{ matrix.SDL_VERSION }}
+      SDL_MIXER_VERSION: ${{ matrix.SDL_MIXER_VERSION }}
+      MPG123_VERSION: ${{ matrix.MPG123_VERSION }}
+      BUILD_TARGET: ${{ matrix.BUILD_TARGET }}
+      DEPLOY: ${{ matrix.DEPLOY }}
+      SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        if: ${{ matrix.cache-key }}
+        with:
+          path: deps
+          key: ${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}-${{ env.MPG123_VERSION }}
+      - name: Set up environment
+        env:
+          FILE_ENCRYPTION_IV: ${{ secrets.FILE_ENCRYPTION_IV }}
+          FILE_ENCRYPTION_KEY: ${{ secrets.FILE_ENCRYPTION_KEY }}
+        run: |
+          ./.ci_scripts/setup_environment.sh
+          ./.ci_scripts/install_dependencies.sh
+      - name: Build and test
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEYSTORE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
+        run: |
+          ./.ci_scripts/pack_assets.sh
+          ./.ci_scripts/run_cmake.sh
+          ./.ci_scripts/run_build.sh
+      - name: Upload development artifacts
+        env:
+          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
+        run: |
+          ./.ci_scripts/build_upload.sh
+        continue-on-error: true
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}
+          path: deploy/
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows 32-bit
+            cache-key: mingw
+            COMPILER: mingw-32
+          - name: Windows 64-bit
+            cache-key: mingw
+            COMPILER: mingw-64
+            SKIP_UPLOAD: true
+          - name: Windows MSVC
+            cache-key: msvc
+            COMPILER: msvc
+            SKIP_UPLOAD: true
+    name: ${{ matrix.name }}
+    runs-on: windows-latest
+    env:
+      SDL_VERSION: 2.0.20
+      SDL_MIXER_VERSION: 2.0.4
+      COMPILER: ${{ matrix.COMPILER }}
+      SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: deps
+          key: windows-${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
+      - name: Set up MSYS2
+        if: matrix.COMPILER == 'mingw-32'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw32
+          location: D:\
+          install: mingw-w64-i686-gcc
+          update: true
+      - name: Set up environment
+        run: ./.ci_scripts/install_sdl.ps1
+      - name: Build and test
+        run: ./.ci_scripts/run_build.ps1
+      - name: Upload development artifacts
+        env:
+          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
+        run: ./.ci_scripts/build_upload.ps1
+        continue-on-error: true
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}
+          path: deploy\
+      - uses: actions/setup-ruby@v1
+      - name: Send Webhook Notification
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          HOOK_OS_NAME: ${{ runner.os }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+        run: |
+          git clone https://github.com/DiscordHooks/github-actions-discord-webhook.git webhook
+          bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+        shell: bash
