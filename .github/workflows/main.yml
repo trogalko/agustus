@@ -84,9 +84,7 @@ jobs:
           FILE_ENCRYPTION_KEY: ${{ secrets.FILE_ENCRYPTION_KEY }}
         run: |
           ./.ci_scripts/setup_environment.sh
-          ./.ci_scripts/install_dependencies.sh
-      - name: Make gradlew executable
-        run : chmod +x ./gradlew
+          ./.ci_scripts/install_dependencies.sh      
       - name: Build and test
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}

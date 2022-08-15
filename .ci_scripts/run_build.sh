@@ -61,6 +61,8 @@ case "$BUILD_TARGET" in
 	else
 		COMMAND=assembleRelease
 	fi
+	echo "Make gradlew executable"
+    chmod +x ./gradlew
 	echo "Running ./gradlew $COMMAND"
 	TERM=dumb ./gradlew $COMMAND
 	if [ -f augustus/build/outputs/apk/release/augustus-release.apk ]
