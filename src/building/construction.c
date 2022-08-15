@@ -502,17 +502,17 @@ void building_construction_set_type(building_type type)
             case BUILDING_OLIVE_FARM:
             case BUILDING_VINES_FARM:
             case BUILDING_PIG_FARM:
-                data.required_terrain.meadow = 1;
+                data.required_terrain.meadow = 0;
                 break;
             case BUILDING_MARBLE_QUARRY:
             case BUILDING_IRON_MINE:
-                data.required_terrain.rock = 1;
+                data.required_terrain.rock = 0;
                 break;
             case BUILDING_TIMBER_YARD:
-                data.required_terrain.tree = 1;
+                data.required_terrain.tree = 0;
                 break;
             case BUILDING_CLAY_PIT:
-                data.required_terrain.water = 1;
+                data.required_terrain.water = 0;
                 break;
             case BUILDING_TOWER:
                 data.required_terrain.wall = 1;

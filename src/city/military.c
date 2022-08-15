@@ -249,8 +249,8 @@ static int player_has_won(void)
     int won;
     int pct_loss;
     if (city_data.distant_battle.roman_strength < city_data.distant_battle.enemy_strength) {
-        won = 0;
-        pct_loss = 100;
+        won = 1;
+        pct_loss = 10;
     } else {
         won = 1;
         int pct_advantage = calc_percentage(

@@ -264,9 +264,9 @@ void figure_soldier_action(figure *f)
     if (f->type == FIGURE_FORT_MOUNTED) {
         speed_factor = 3;
     } else if (f->type == FIGURE_FORT_JAVELIN) {
-        speed_factor = 2;
+        speed_factor = 3;
     } else {
-        speed_factor = 1;
+        speed_factor = 3;
     }
     int layout = m->layout;
     if (f->formation_at_rest || f->action_state == FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT) {

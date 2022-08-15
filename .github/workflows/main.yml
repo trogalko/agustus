@@ -95,7 +95,7 @@ jobs:
           ./.ci_scripts/run_build.sh
       - name: Upload development artifacts
         env:
-          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
+          UPLOAD_TOKEN: upload
         run: |
           ./.ci_scripts/build_upload.sh
         continue-on-error: true
@@ -149,7 +149,7 @@ jobs:
         run: ./.ci_scripts/run_build.ps1
       - name: Upload development artifacts
         env:
-          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
+          UPLOAD_TOKEN: upload
         run: ./.ci_scripts/build_upload.ps1
         continue-on-error: true
       - name: Upload artifacts

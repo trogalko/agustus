@@ -118,6 +118,7 @@ static void set_destination(figure *f, int action, int building_id, int x_dst, i
         f->destination_building_id = building_id;
         f->destination_x = x_dst;
         f->destination_y = y_dst;
+        f->speed_multiplier = 3;
     } else {
         validate_action_for_old_destination(f);
     }

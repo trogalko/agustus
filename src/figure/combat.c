@@ -84,6 +84,10 @@ static void hit_opponent(figure *f)
             attack_is_same_direction(f->attack_direction, m->direction)) {
         figure_attack += 4; // coordinated formation attack bonus
     }
+    if (f->type == FIGURE_FORT_JAVELIN || f->type == FIGURE_FORT_LEGIONARY || f->type == FIGURE_FORT_MOUNTED) {
+        figure_attack += 20;
+        opponent_defense -= 20;
+    }
     // defense modifiers
     if (opponent_formation->is_halted &&
             (opponent_formation->figure_type == FIGURE_FORT_LEGIONARY ||

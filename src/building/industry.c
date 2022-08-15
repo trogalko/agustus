@@ -274,7 +274,12 @@ void building_industry_start_new_production(building *b)
             if (b->loads_stored > 1) {
                 b->data.industry.has_raw_materials = 1;
             }
-            b->loads_stored--;
+            if (b->loads_stored > 1) {
+                b->loads_stored--;
+            }
+            else {
+                b->loads_stored++;
+            }
         }
     }
     if (building_is_farm(b->type)) {

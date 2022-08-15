@@ -116,7 +116,7 @@ int trade_price_buy(resource_type resource, int land_trader)
 
 int trade_price_sell(resource_type resource, int land_trader)
 {
-    return calc_adjust_with_percentage(prices[resource].sell, 100 + trade_factor_sell(land_trader));
+    return calc_adjust_with_percentage(prices[resource].buy, 100 + trade_factor_sell(land_trader));
 }
 
 int trade_price_change(resource_type resource, int amount)

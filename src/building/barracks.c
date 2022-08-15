@@ -128,7 +128,12 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
         f->formation_at_rest = 1;
         if (m->figure_type == FIGURE_FORT_LEGIONARY) {
             if (barracks->loads_stored > 0) {
-                barracks->loads_stored--;
+                if (barracks->loads_stored == 1) {
+                    barracks->loads_stored++;
+                }
+                else {
+                    barracks->loads_stored--;
+                }
             }
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));

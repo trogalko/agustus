@@ -497,9 +497,14 @@ static void consume_resource(building *b, int inventory, int amount)
 {
     if (amount > 0) {
         if (amount > b->data.house.inventory[inventory]) {
-            b->data.house.inventory[inventory] = 0;
+            b->data.house.inventory[inventory] = (2 * amount);
         } else {
-            b->data.house.inventory[inventory] -= amount;
+            if (b->data.house.inventory - amount <= 0) {
+                b->data.house.inventory[inventory] = amount;
+            }
+            else {
+                b->data.house.inventory[inventory] -= amount;
+            }
         }
     }
 }

@@ -143,8 +143,8 @@ void city_festival_schedule(void)
         city_data.festival.planned.months_to_go = 3;
         cost = city_data.festival.large_cost;
     } else {
-        city_data.festival.planned.months_to_go = 4;
-        cost = city_data.festival.grand_cost;
+        city_data.festival.planned.months_to_go = 2;        
+        cost = city_data.festival.small_cost;
     }
 
     city_finance_process_sundry(cost);
@@ -161,7 +161,7 @@ void city_festival_schedule(void)
                 venus_gt->loads_stored = 0;
             }
         }
-        building_warehouses_remove_resource(RESOURCE_WINE, wine_needed);
+        //building_warehouses_remove_resource(RESOURCE_WINE, wine_needed);
     }
 }
 
